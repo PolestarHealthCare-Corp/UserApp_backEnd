@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- 1. 병원명 -->
+        <EditText
+            android:id="@+id/etHospitalName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="병원명(최대 15자)" />
+
+        <!-- 2. 병원 주소 -->
+        <EditText
+            android:id="@+id/etHospitalAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="주소 입력 또는 검색" />
+
+        <!-- 3. 담당자명 -->
+        <EditText
+            android:id="@+id/etContactName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="담당자 이름" />
+
+        <!-- 4. 담당자 연락처 -->
+        <EditText
+            android:id="@+id/etContactPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="010-0000-0000"
+            android:inputType="phone" />
+
+        <!-- 5. 병원유형 -->
+        <Spinner
+            android:id="@+id/spHospitalType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- 6. 진료과 -->
+        <EditText
+            android:id="@+id/etSpecialties"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="주요 진료과" />
+
+        <!-- 7~10. 장비 보유 대수 -->
+        <EditText
+            android:id="@+id/etXray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="X-ray 보유 대수"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etCT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="CT 보유 대수"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etMR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="MR 보유 대수"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/etMG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="MG 보유 대수"
+            android:inputType="number" />
+
+        <!-- 11. 메모/특이사항 -->
+        <EditText
+            android:id="@+id/etMemo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="메모/특이사항"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:minLines="3" />
+
+        <!-- 12. 개인정보 수집 동의 -->
+        <CheckBox
+            android:id="@+id/cbAgree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개인정보 수집 및 제공에 동의합니다."/>
+
+        <!-- 13. 제출 버튼 -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="제출"
+            android:enabled="false" />
+    </LinearLayout>
+</ScrollView>

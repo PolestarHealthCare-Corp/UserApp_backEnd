@@ -7,7 +7,6 @@ import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
 import android.content.ContentValues.TAG
-import android.content.Context
 
 
 /**
@@ -18,7 +17,7 @@ import android.content.Context
 
 /** 주요 Method 기능 설명
  *   - saveUserInfo(name, phone)    : 이름/연락처 저장. 앱 컷다 켜도 유지됨
- *   - loadUserInfo()               :저장된 이름/연락처 가져오기
+ *   - loadUserInfo()               : 저장된 이름/연락처 가져오기
  *   - containUserInfo()            : 이름+연락처가 저장되어 있으면 true
  *   - saveUser(user)               : User 객체 전체 저장(이름, 연락처, 토큰  포함)
  *   - getUser()                    : 저장된 User 객체를 가져옴

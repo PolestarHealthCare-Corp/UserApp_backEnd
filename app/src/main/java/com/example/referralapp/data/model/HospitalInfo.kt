@@ -1,5 +1,6 @@
 package com.example.referralapp.data.model
 
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 
 data class HospitalInfo(
@@ -31,6 +32,10 @@ data class HospitalInfo(
     val updatedAt: String? = null
 ) {
     fun isValid(): Boolean {
-        return name.isNotBlank() && address.isNotBlank() && phone.isNotBlank()
+        val valid = name.isNotBlank() && address.isNotBlank() && phone.isNotBlank()
+        if (!valid) {
+            Log.w("HospitalInfo", "Invalid HospitalInfo: name=$name, address=$address, phone=$phone")
+        }
+        return valid
     }
 }

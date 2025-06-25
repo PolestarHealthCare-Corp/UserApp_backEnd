@@ -1,11 +1,32 @@
 package com.example.referralapp.data.local
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.example.referralapp.data.model.User
 import com.google.gson.Gson
 import javax.inject.Inject
 import javax.inject.Singleton
+import android.content.ContentValues.TAG
+import android.content.Context
 
+
+/**
+*   SharedPreferences를 통해 사용자 정보, JWT Token 등을 저장, 조회, 관리하는 클래스
+*   SharedPreferences는 App 내에서 사용자 설정을 저장하고 불러오는 용도.
+*   @Inject를 통해 의존성 주입
+*/
+
+/** 주요 Method 기능 설명
+ *   - saveUserInfo(name, phone)    : 이름/연락처 저장. 앱 컷다 켜도 유지됨
+ *   - loadUserInfo()               :저장된 이름/연락처 가져오기
+ *   - containUserInfo()            : 이름+연락처가 저장되어 있으면 true
+ *   - saveUser(user)               : User 객체 전체 저장(이름, 연락처, 토큰  포함)
+ *   - getUser()                    : 저장된 User 객체를 가져옴
+ *   - getJwtToken()                : 저장된 JWT 토큰만 따로 가져옴
+ *   - clearUser(isFullReset)       : 저장된 모든 사용자 정보 제거. true면 앱 최초 실행 플래그까지 지움.
+ *   - isFirstLaunch()              : 앱이 처음 실행되는지 확인(최초 실행이면 true)
+ *   - setFirstLaunchCompleted()    : "첫 실행 아님"으로 표시함
+ */
 @Singleton
 class PrefManager @Inject constructor(
     private val sharedPreferences: SharedPreferences
@@ -16,10 +37,43 @@ class PrefManager @Inject constructor(
         private const val KEY_USER = "user"
         private const val KEY_JWT_TOKEN = "jwt_token"
         private const val KEY_IS_FIRST_LAUNCH = "is_first_launch"
+        private const val KEY_NAME = "name"
+        private const val KEY_PHONE = "phone"
     }
 
     /**
-     * 사용자 정보 저장
+    *   이름/연락처 별도 저장(간편 로그인)
+     */
+    fun saveUserInfo(name: String, phone: String) {
+        sharedPreferences.edit().apply {
+            putString(KEY_NAME, name)
+            putString(KEY_PHONE, phone)
+            apply()
+        }
+        Log.d(TAG, "UserInfo saved: name=$name, phone=$phone")
+    }
+
+    /**
+    *   이름/연락처 불러오기 (App 재실행 시 자동 로그인용)
+     */
+    fun loadUserInfo(): Pair<String?, String?> {
+        val name = sharedPreferences.getString(KEY_NAME, null)
+        val phone = sharedPreferences.getString(KEY_PHONE, null)
+        Log.d(TAG, "UserInfo loaded: name=$name, phone=$phone")
+        return Pair(name, phone)
+    }
+
+    /** 이름/연락처가 저장되어 있는지 여부 확인 */
+    fun ContainUserInfo(): Boolean {
+        val (name, phone) = loadUserInfo()
+        return !name.isNullOrEmpty() && !phone.isNullOrEmpty()
+    }
+
+    /**
+     *  사용자 정보 저장
+     *  1) edit() method로 Editor 객체 획득
+     *  2) putString() method --> JSON 문자열로 변환한 사용자 정보 저장
+     *  3) apply(), commit()으로 저장
      */
     fun saveUser(user: User) {
         val userJson = gson.toJson(user)
@@ -27,26 +81,33 @@ class PrefManager @Inject constructor(
             .putString(KEY_USER, userJson)
             .apply()
 
+        Log.d(TAG, "User saved: $userJson")
+
         // JWT 토큰 별도 저장
         user.jwtToken?.let { token ->
             sharedPreferences.edit()
                 .putString(KEY_JWT_TOKEN, token)
                 .apply()
+            Log.d(TAG, "JWT Token saved: $token")
         }
     }
 
     /**
-     * 사용자 정보 조회
+     * 사용자 전체 정보 불러오기
      */
     fun getUser(): User? {
         val userJson = sharedPreferences.getString(KEY_USER, null)
         return if (userJson != null) {
             try {
-                gson.fromJson(userJson, User::class.java)
+                val user = gson.fromJson(userJson, User::class.java)
+                Log.d(TAG, "User loaded: $user")
+                user
             } catch (e: Exception) {
+                Log.e(TAG, "Error loading user Parsing", e)
                 null
             }
         } else {
+            Log.w(TAG, "User not found")
             null
         }
     }
@@ -55,32 +116,48 @@ class PrefManager @Inject constructor(
      * JWT 토큰 조회
      */
     fun getJwtToken(): String? {
-        return sharedPreferences.getString(KEY_JWT_TOKEN, null)
+        val token = sharedPreferences.getString(KEY_JWT_TOKEN, null)
+        if (token != null) {
+            Log.d(TAG, "JWT Token loaded: $token")
+        }   else {
+                Log.w(TAG, "JWT Token not found")
+        }
+        return token
     }
 
     /**
      * 사용자 정보 삭제 (로그아웃)
      */
-    fun clearUser() {
-        sharedPreferences.edit()
-            .remove(KEY_USER)
-            .remove(KEY_JWT_TOKEN)
-            .apply()
+    fun clearUser(isFullReset: Boolean = false) {
+        sharedPreferences.edit().apply {
+            remove(KEY_USER)
+            remove(KEY_JWT_TOKEN)
+            remove(KEY_NAME)
+            remove(KEY_PHONE)
+            if (isFullReset) {
+                remove(KEY_IS_FIRST_LAUNCH)
+            }
+            apply()
+            Log.d(TAG, "User and JWT Token cleared")
+        }
     }
 
     /**
      * 첫 실행 여부 확인
      */
     fun isFirstLaunch(): Boolean {
-        return sharedPreferences.getBoolean(KEY_IS_FIRST_LAUNCH, true)
+        val isFirst = sharedPreferences.getBoolean(KEY_IS_FIRST_LAUNCH, true)
+        Log.d(TAG, "isFirstLaunch: $isFirst")
+        return isFirst
     }
 
     /**
-     * 첫 실행 완료 처리
+     * 첫 실행 플래그를 false로 변경
      */
     fun setFirstLaunchCompleted() {
         sharedPreferences.edit()
             .putBoolean(KEY_IS_FIRST_LAUNCH, false)
             .apply()
+        Log.d(TAG, "First launch completed")
     }
 }

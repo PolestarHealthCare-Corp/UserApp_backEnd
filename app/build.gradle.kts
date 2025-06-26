@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt") // Hilt와 Glide 사용 시 필요
-    id("dagger.hilt.android.plugin") // ← 꼭 있어야 함!
+    id("dagger.hilt.android.plugin") // Hilt와 Glide 사용 시 필요
 }
 
 android {
@@ -84,4 +84,8 @@ dependencies {
 
 // Gson
     implementation("com.google.code.gson:gson:2.10.1")
+
+    // Android Security
+    implementation ("androidx.security:security-crypto:1.1.0-alpha06")
+
 }

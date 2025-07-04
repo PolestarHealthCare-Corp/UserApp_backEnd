@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt") // Hilt와 Glide 사용 시 필요
-    id("dagger.hilt.android.plugin") // Hilt와 Glide 사용 시 필요
+    id("com.google.dagger.hilt.android") // Hilt와 Glide 사용 시 필요
 }
 
 android {
@@ -38,6 +38,7 @@ android {
     }
     buildFeatures {
         compose = true
+        dataBinding = true
     }
 }
 
@@ -58,6 +59,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.glide)
 
     // Retrofit (API 통신)
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -88,4 +92,6 @@ dependencies {
     // Android Security
     implementation ("androidx.security:security-crypto:1.1.0-alpha06")
 
+    // appCompat
+    implementation ("androidx.appcompat:appcompat:1.6.1") // Or a newer stable version
 }

@@ -7,11 +7,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.util.Log
+import androidx.security.crypto.MasterKeys
 
 object AppClient {
 
     // 모든 API 요청을 위한 BASE_URL 설정
     private const val BASE_URL = "https://your.api.server/" // 실제 서버 주소로 교체
+
+    val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+    val encryptedPrefs = EncryptedSharedPreferences.create(
+        "encrypted_referral_app_prefs", // 파일 이름
+        masterKeyAlias,
+        context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+    )
 
     // create() method를 통해 sharedPreferences를 받아 ApiServices 반환하는 방식
     fun create(context: Context): ApiService {

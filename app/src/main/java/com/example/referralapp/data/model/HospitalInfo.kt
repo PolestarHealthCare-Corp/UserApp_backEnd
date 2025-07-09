@@ -3,38 +3,61 @@ package com.example.referralapp.data.model
 import android.util.Log
 import com.google.gson.annotations.SerializedName
 
+
 data class HospitalInfo(
-    @SerializedName("id")
-    val id: String? = null,
 
-    @SerializedName("name")
-    val name: String,
+    // AUTO_INCREMENT 이므로 null 허용
+    @SerializedName("hospital_info_id")
+    val hospitalInfoId: Long? = null,
 
-    @SerializedName("address")
-    val address: String,
+    // FK Key. 사용자(user)의 Phone과 연결
+    @SerializedName("member_phone")
+    val memberPhone: String,
 
-    @SerializedName("phone")
-    val phone: String,
+    // 병원명
+    @SerializedName("hospital_info_name")
+    val hospitalInfoName: String,
 
-    @SerializedName("speciality")
-    val speciality: String? = null,
+    // 병원 주소(행정안전부 API)
+    @SerializedName("hospital_info_address")
+    val hospitalInfoAddress: String,
 
-    @SerializedName("description")
-    val description: String? = null,
+    // 병원 담당자 이름
+    @SerializedName("hospital_info_contact_name")
+    val hospitalInfoContactName: String,
 
-    @SerializedName("registered_by")
-    val registeredBy: String? = null,
+    // 병원 담당자 연락처
+    @SerializedName("hospital_info_contact_phone")
+    val hospitalInfoContactPhone: String,
 
-    @SerializedName("created_at")
-    val createdAt: String? = null,
 
-    @SerializedName("updated_at")
-    val updatedAt: String? = null
+    // 메모(특이사항), nullable
+    @SerializedName("hospital_info_memo")
+    val hospitalInfoMemo: String? = null,
+
+
+    // 사용 여부(사용중: 1, 미사용: 0)
+    @SerializedName("hospital_info_is_active")
+    val hospitalInfoIsActive: Boolean = true,
+
+
+    // 등록일, nullable
+    @SerializedName("hospital_info_created_at")
+    val hospitalInfoCreatedAt: String? = null,
+
+
+    // 관리자(admin) comment
+    @SerializedName("hospital_info_admin_comment")
+    val hospitalInfoAdminComment: String? = null,
+
 ) {
     fun isValid(): Boolean {
-        val valid = name.isNotBlank() && address.isNotBlank() && phone.isNotBlank()
+        val valid = hospitalInfoName.isNotBlank()
+                    && hospitalInfoAddress.isNotBlank()
+                    && hospitalInfoContactName.isNotBlank()
+                    && hospitalInfoContactPhone.isNotBlank()
         if (!valid) {
-            Log.w("HospitalInfo", "Invalid HospitalInfo: name=$name, address=$address, phone=$phone")
+            Log.w("HospitalInfo", "Invalid HospitalInfo: hospitalInfoName=$hospitalInfoName, hospitalInfoAddress=$hospitalInfoAddress, hospitalInfoContactName=$hospitalInfoContactName, hospitalInfoContactPhone=$hospitalInfoContactPhone")
         }
         return valid
     }

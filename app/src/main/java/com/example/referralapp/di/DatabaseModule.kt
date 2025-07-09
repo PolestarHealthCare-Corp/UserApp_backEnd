@@ -3,7 +3,6 @@ package com.example.referralapp.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import com.example.referralapp.data.local.PrefManager
 import com.example.referralapp.utils.Constants
 import dagger.Module
@@ -57,17 +56,19 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): SharedPreferences {
         return try {
-            val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+            val masterKey = MasterKey.Builder(context)
+                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                .build()
 
             EncryptedSharedPreferences.create(
-                Constants.ENCRYPTED_PREFS_NAME,
-                masterKeyAlias,
                 context,
+                Constants.ENCRYPTED_PREFS_NAME,
+                masterKey,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         } catch (e: Exception) {
-            // 암호화 실패 시 일반 SharedPreferences Instance를 반환
+            // 암호화 실패 시 일반 SharedPreferences Instance를 반환 --> fallback 처리
             context.getSharedPreferences(
                 "${Constants.ENCRYPTED_PREFS_NAME}_fallback",
                 Context.MODE_PRIVATE

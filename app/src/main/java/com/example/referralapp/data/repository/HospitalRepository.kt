@@ -47,11 +47,16 @@ class HospitalRepository @Inject constructor(
                     if (errorBody.isNotBlank()) append(" - $errorBody")
                 }
 
-                Log.e(TAG, "Response failed: $fullErrorMessage")
+                Log.e(TAG, """
+                    - code: $code
+                    - Message: $message
+                    - Error Body: $errorBody
+                    """.trimIndent())
                 Result.failure(Exception(fullErrorMessage))
             }
         }
     }
+
 
     /**
      * 병원 정보 등록
@@ -67,8 +72,9 @@ class HospitalRepository @Inject constructor(
             Log.e(TAG, "HTTP Error [${e.code()}]: ${e.message()}", e)
             Result.failure(Exception("네트워크 오류: ${e.message()}"))
         } catch (e: IOException) {
-            Log.e(TAG, "Network Error: ${e.localizedMessage}", e)
-            Result.failure(Exception("네트워크 연결 오류: ${e.localizedMessage}"))
+            Log.e(TAG, "Network Error", e)
+            // 사용자 메시지는 UI단에서 설정(ex: "네트워크 연결을 확인해주세요."
+            Result.failure(e)
         } catch (e: Exception) {
             Log.e(TAG, "Unexpected Error: ${e.localizedMessage}", e)
             Result.failure(e)

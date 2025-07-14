@@ -39,6 +39,7 @@ android {
     buildFeatures {
         compose = true
         dataBinding = true
+        viewBinding = true
     }
 }
 
@@ -52,6 +53,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -68,7 +70,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 // OkHttp (인터셉터 포함)
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 // Coroutine

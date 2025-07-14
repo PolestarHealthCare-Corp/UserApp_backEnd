@@ -16,16 +16,17 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    val name = MutableLiveData<String>()
-    val phone = MutableLiveData<String>()
+    val name = MutableLiveData<String>().apply { value = ""}
+    val phone = MutableLiveData<String>().apply { value = ""}
 
     // 명확한 상태 관리
     private val _loginState = MutableLiveData<LoginUiState>(LoginUiState.Idle)
     val loginState: LiveData<LoginUiState> = _loginState
 
     fun login() {
-        val nameValue = name.value.orEmpty()
-        val phoneValue = phone.value.orEmpty()
+        val nameValue = name.value.orEmpty().trim()
+        val phoneValue = phone.value.orEmpty().trim()
+        val roleValue = 1
 
         // 입력값 검증
         if (!validateInput(nameValue, phoneValue)) return
@@ -33,28 +34,28 @@ class LoginViewModel @Inject constructor(
         _loginState.value = LoginUiState.Loading
 
         viewModelScope.launch {
-            try {
-                val user = User(nameValue, phoneValue)
-                val result = userRepository.loginOrRegister(user)
-                _loginState.value = if (result) {
-                    LoginUiState.Success
-                } else {
-                    LoginUiState.Error("로그인에 실패했습니다")
+            val user = User(memberName = nameValue, memberPhone = phoneValue, memberRole = roleValue, memberIsActive = true)
+
+            userRepository.loginOrRegister(user)
+                .onSuccess {
+                    _loginState.value = LoginUiState.Success
                 }
-            } catch (e: Exception) {
-                _loginState.value = LoginUiState.Error("네트워크 오류: ${e.message}")
+                .onFailure { exception ->
+                    val message = exception.message ?: "로그인 실패했습니다."
+                    _loginState.value = LoginUiState.Error(message)
+                }
             }
         }
-    }
 
+    /** 입력 유효성 검사   **/
     private fun validateInput(name: String, phone: String): Boolean {
         return when {
             name.isBlank() -> {
-                _loginState.value = LoginUiState.Error("이름을 입력해주세요")
+                _loginState.value = LoginUiState.Error("이름을 입력해주세요.")
                 false
             }
             phone.isBlank() -> {
-                _loginState.value = LoginUiState.Error("전화번호를 입력해주세요")
+                _loginState.value = LoginUiState.Error("연락처를 입력해주세요.")
                 false
             }
             !isValidPhoneNumber(phone) -> {
@@ -65,11 +66,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    /** 연락처 형식 검사 (010xxxxxxxx 또는 010-xxxx-xxxx 허용) **/
     private fun isValidPhoneNumber(phone: String): Boolean {
         return phone.matches(Regex("^01[016789]-?\\d{3,4}-?\\d{4}$"))
     }
 }
 
+/** UI 상태 클래스 **/
 sealed class LoginUiState {
     object Idle : LoginUiState()        // 초기 상태
     object Loading : LoginUiState()     // 로딩 중

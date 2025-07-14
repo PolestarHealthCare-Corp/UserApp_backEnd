@@ -114,6 +114,21 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun loginOrRegister(user: User): Result<User> {
+        return try {
+            val response = apiService.login(user)
+            if(response.isSuccessful) {
+                val loggedInUser = response.body() ?: return Result.failure(Exception("응답 데이터 없음..."))
+                prefManager.saveUser(loggedInUser)
+                Result.success(loggedInUser)
+            } else {
+                Result.failure(Exception("로그인 실패 : ${response.code()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     /**
      * 로그아웃 처리
      */

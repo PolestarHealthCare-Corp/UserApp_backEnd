@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.referralapp.data.model.HospitalInfo
-import com.example.referralapp.databinding.ItemHospitalBinding
 
 class HospitalAdapter : RecyclerView.Adapter<HospitalAdapter.HospitalViewHolder>() {
 
@@ -32,9 +31,9 @@ class HospitalAdapter : RecyclerView.Adapter<HospitalAdapter.HospitalViewHolder>
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(hospital: HospitalInfo) {
-            binding.tvHospitalName.text = hospital.name
-            binding.tvAddress.text = hospital.address
-            binding.tvPhone.text = hospital.phone
+            binding.tvHospitalName.text = hospital.hospitalInfoName
+            binding.tvAddress.text = hospital.hospitalInfoAddress
+            binding.tvPhone.text = hospital.hospitalInfoContactPhone
         }
     }
 }

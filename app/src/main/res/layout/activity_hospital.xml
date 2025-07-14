@@ -20,7 +20,7 @@
 
             <!-- 2. 병원 주소 -->
             <EditText
-                android:id="@+id/etHospitalAddress"
+                android:id="@+id/etAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="주소 입력 또는 검색" />

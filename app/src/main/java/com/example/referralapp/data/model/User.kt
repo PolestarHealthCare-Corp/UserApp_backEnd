@@ -25,7 +25,7 @@ data class User(
     @SerializedName("member_created_at")
     val memberCreatedAt: String? = null,
 
-    // JWT Token
+    // JWT Token --> 서버에서 오는 JwtToken 필드명이 "jwtToken"이 맞는지 확인 필요
     @SerializedName("jwtToken")
     val jwtToken: String? = null,
 

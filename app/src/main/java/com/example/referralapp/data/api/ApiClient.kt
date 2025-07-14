@@ -15,7 +15,7 @@ import androidx.security.crypto.MasterKey
 object AppClient {
 
     // 모든 API 요청을 위한 BASE_URL 설정
-    private const val BASE_URL = "https://your.api.server/" // 실제 서버 주소로 교체
+    private const val BASE_URL = "https://10.0.2.2:8080/" // 실제 서버 주소로 교체
 
     /**
      * create() method를 통해 SharedPreferences 기반으로 ApiService 반환

@@ -56,23 +56,23 @@ class UserRepository @Inject constructor(
     }
 
     /**
-     * 로그인 또는 회원가입 처리
+     * 로그인 처리
      */
-    suspend fun loginOrRegister(user: User): Result<User> {
+    suspend fun login(user: User): Result<User> {
         return try {
             if (!user.isValid()) {
                 return Result.failure(Exception("이름과 연락처를 모두 입력해주세요"))
             }
 
-            Log.d(TAG, "로그인/회원가입 요청: 이름=${user.name}, 연락처=${user.phone}")
+            Log.d(TAG, "로그인 요청: 이름=${user.memberName}, 연락처=${user.memberPhone}")
 
-            val response = apiService.loginOrRegister(user)
-            val result = handleResponse(response, "로그인/회원가입에 실패했습니다")
+            val response = apiService.login(user)
+            val result = handleResponse(response, "로그인 실패했습니다")
 
             result.onSuccess { loggedInUser ->
                 try {
                     prefManager.saveUser(loggedInUser)
-                    Log.d(TAG, "사용자 정보 로컬 저장 완료: 이름=${loggedInUser.name}, 연락처=${loggedInUser.phone}")
+                    Log.d(TAG, "사용자 정보 로컬 저장 완료: 이름=${loggedInUser.memberName}, 연락처=${loggedInUser.memberPhone}")
                 } catch (e: Exception) {
                     Log.e(TAG, "사용자 정보 저장 실패: ${e.message}", e)
                 }
@@ -104,7 +104,7 @@ class UserRepository @Inject constructor(
         return try {
             val user = prefManager.getUser()
             if (user != null) {
-                Log.d(TAG, "저장된 사용자 정보 조회 성공: 이름=${user.name}, 연락처=${user.phone}")
+                Log.d(TAG, "저장된 사용자 정보 조회 성공: 이름=${user.memberName}, 연락처=${user.memberPhone}")
             } else {
                 Log.d(TAG, "저장된 사용자 정보 없음")
             }
@@ -124,7 +124,7 @@ class UserRepository @Inject constructor(
 
             val currentUser = prefManager.getUser()
             if (currentUser != null) {
-                Log.d(TAG, "로그아웃 사용자: 이름=${currentUser.name}, 연락처=${currentUser.phone}")
+                Log.d(TAG, "로그아웃 사용자: 이름=${currentUser.memberName}, 연락처=${currentUser.memberPhone}")
             }
 
             prefManager.clearUser()
@@ -147,7 +147,7 @@ class UserRepository @Inject constructor(
 
             Log.d(TAG, "로그인 상태: $isLoggedIn")
             if (isLoggedIn) {
-                Log.d(TAG, "로그인된 사용자: 이름=${user!!.name}, 연락처=${user.phone}")
+                Log.d(TAG, "로그인된 사용자: 이름=${user!!.memberName}, 연락처=${user.memberPhone}")
             }
 
             isLoggedIn

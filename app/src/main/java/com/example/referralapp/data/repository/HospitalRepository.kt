@@ -79,10 +79,10 @@ class HospitalRepository @Inject constructor(
      * 내가 등록한 병원 목록 조회
      * @return 병원 목록
      */
-    suspend fun getMyHospitalList(): Result<List<HospitalInfo>> {
+    suspend fun getMyHospitalList(dateFilter: String): Result<List<HospitalInfo>> {
         return try {
-            Log.d(TAG, "getMyHospitalList() called")
-            val response = apiService.getMyHospitalList()
+            Log.d(TAG, "getMyHospitalList() called with date: $dateFilter")
+            val response = apiService.getMyHospitalList(dateFilter)
             handleResponse(response, "병원 목록 조회 실패")
         } catch (e: HttpException) {
             Log.e(TAG, "HTTP Error [${e.code()}]: ${e.message()}", e)

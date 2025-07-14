@@ -24,35 +24,7 @@ class PrefManager @Inject constructor(
         private const val TAG = "PrefManager"
         private const val KEY_USER = "user"
         private const val KEY_JWT_TOKEN = "jwt_token"
-        private const val KEY_IS_FIRST_LAUNCH = "is_first_launch"
-        private const val KEY_NAME = "name"
-        private const val KEY_PHONE = "phone"
-    }
-
-    /** 이름/연락처 저장 (간편 로그인용) */
-    fun saveUserInfo(name: String, phone: String) {
-        standardPrefs.edit().apply {
-            putString(KEY_NAME, name)
-            putString(KEY_PHONE, phone)
-            apply()
-        }
-        Log.d(TAG, "UserInfo 저장됨 → name=$name, phone=$phone")
-    }
-
-    /** 저장된 이름/연락처 반환 */
-    fun loadUserInfo(): Pair<String?, String?> {
-        val name = standardPrefs.getString(KEY_NAME, null)
-        val phone = standardPrefs.getString(KEY_PHONE, null)
-        Log.d(TAG, "UserInfo 불러옴 → name=$name, phone=$phone")
-        return Pair(name, phone)
-    }
-
-    /** 이름/연락처가 모두 저장되어 있는지 확인 */
-    fun hasUserInfo(): Boolean {
-        val (name, phone) = loadUserInfo()
-        val hasInfo = !name.isNullOrEmpty() && !phone.isNullOrEmpty()
-        Log.d(TAG, "hasUserInfo: $hasInfo")
-        return hasInfo
+        // private const val KEY_IS_FIRST_LAUNCH = "is_first_launch"
     }
 
     /** User 객체 저장 + JWT Token 별도 저장 */
@@ -108,15 +80,17 @@ class PrefManager @Inject constructor(
     fun clearUser(isFullReset: Boolean = false) {
         standardPrefs.edit().apply {
             remove(KEY_USER)
-            remove(KEY_NAME)
-            remove(KEY_PHONE)
-            if (isFullReset) remove(KEY_IS_FIRST_LAUNCH)
-            apply()
+            if (isFullReset) {
+                // remove(KEY_IS_FIRST_LAUNCH)
+                apply()
+            }
         }
         encryptedPrefs.edit().remove(KEY_JWT_TOKEN).apply()
 
         Log.d(TAG, "사용자 정보 및 JWT Token 삭제됨 (isFullReset=$isFullReset)")
     }
+    /**
+     *      온보딩(앱 첫 실행여부에 따른 추가 동작 있을 때 구현 예정
 
     /** 앱 첫 실행 여부 확인 */
     fun isFirstLaunch(): Boolean {
@@ -132,4 +106,5 @@ class PrefManager @Inject constructor(
             .apply()
         Log.d(TAG, "첫 실행 플래그 비활성화됨")
     }
+    */
 }

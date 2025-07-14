@@ -24,8 +24,7 @@ class UserRepository @Inject constructor(
      * 공통 응답 처리 메서드
      */
     private fun <T> handleResponse(
-        response: Response<T>,
-        defaultErrorMessage: String
+        response: Response<T>, defaultErrorMessage: String
     ): Result<T> {
         return if (response.isSuccessful) {
             val body = response.body()

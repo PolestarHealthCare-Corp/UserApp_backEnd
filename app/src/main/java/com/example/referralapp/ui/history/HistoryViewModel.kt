@@ -30,9 +30,9 @@ class HospitalViewModel @Inject constructor(
             hospitalRepository.getReferralHistory()
                 .onSuccess { hospitals ->
                     _historyState.value = if (hospitals.isNotEmpty()) {
-                        HistoryUiState.Empty
-                    } else {
                         HistoryUiState.Success(hospitals)
+                    } else {
+                        HistoryUiState.Empty
                     }
                 }
                 .onFailure { exception ->

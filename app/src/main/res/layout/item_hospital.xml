@@ -2,32 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
+    android:background="?android:selectableItemBackground"
     android:orientation="vertical"
-    android:background="?android:selectableItemBackground">
+    android:padding="12dp">
 
+
+    <!-- 'tv' = TextView -->
     <TextView
         android:id="@+id/tvHospitalName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="병원 이름"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="2dp"
         android:text="주소"
-        android:textSize="14sp"
-        android:paddingTop="2dp" />
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/tvPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="2dp"
         android:text="전화번호"
-        android:textSize="14sp"
-        android:paddingTop="2dp" />
+        android:textSize="14sp" />
 
 </LinearLayout>
